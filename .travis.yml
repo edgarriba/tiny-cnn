@@ -15,8 +15,6 @@ cache:
   pip: true
   directories:
     - $HOME/.pip-cache/
-    - $HOME/PeachPy
-    - $HOME/NNPACK
 
 addons:
   apt:
@@ -34,11 +32,12 @@ addons:
 branches:
   only:
     - master
-    - feat/generic-computational-graph
 env:
   global:
+    - USE_TBB=ON
     - BUILD_TESTS=ON
     - BUILD_EXAMPLES=ON
+    - COVERALLS=ON
  
   matrix:
     - USE_SSE=OFF USE_AVX=OFF
@@ -63,14 +62,23 @@ install:
 
 before_script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      cmake -DUSE_SSE=$USE_SSE
-            -DUSE_AVX=$USE_AVX
-            -DBUILD_TESTS=$BUILD_TESTS
-            -DCOVERALLS=ON
-            -DBUILD_EXAMPLES=$BUILD_EXAMPLES .;
+      if [ "$CXX" == "g++" ]; then
+        cmake -DUSE_TBB=$USE_TBB
+              -DUSE_SSE=$USE_SSE
+              -DUSE_AVX=$USE_AVX
+              -DBUILD_TESTS=$BUILD_TESTS
+              -DCOVERALLS=$COVERALLS
+              -DBUILD_EXAMPLES=$BUILD_EXAMPLES .;
+      else
+        cmake -DUSE_TBB=$USE_TBB
+              -DUSE_SSE=$USE_SSE
+              -DUSE_AVX=$USE_AVX
+              -DBUILD_TESTS=$BUILD_TESTS
+              -DBUILD_EXAMPLES=$BUILD_EXAMPLES .;
+      fi
     fi
   - if [ "$TRAVIS_OS_NAME" == "osx"   ]; then
-      cmake -DUSE_TBB=ON 
+      cmake -DUSE_TBB=$USE_TBB
             -DUSE_AVX=OFF
             -DBUILD_TESTS=$BUILD_TESTS .;
     fi
@@ -78,4 +86,13 @@ before_script:
 script: make -j2 && ./test/tiny_dnn_test
 
 after_success:
-  - coveralls --exclude build/CMakeFiles --exclude /usr/include --gcov-options '\-lp'
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then
+    coveralls
+      --exclude test
+      --exclude examples
+      --exclude cereal
+      --exclude third_party
+      --exclude build/CMakeFiles
+      --exclude /usr/include
+      --gcov-options '\-lp'
+    fi
