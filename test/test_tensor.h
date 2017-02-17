@@ -281,6 +281,21 @@ TEST(tensor, view_non_contiguous3) {
     EXPECT_EQ(t2.host_at(1,1), float_t(77.0));
 }
 
+TEST(tensor, view_non_contiguous4) {
+
+    Tensor<float_t> t1({3, 3, 3});
+
+    // we create a sub subView tensor with size @2x2.
+    Tensor<float_t> t2 = t1.subView({0}, {2, 2});
+
+    // modify sub subView tensor
+    for (size_t i = 0; i < t1.size(); ++i) {
+        t1.host_begin()[i] = float_t(i+1);
+    }
+
+    std::cout << t1 << std::endl;
+}
+
 TEST(tensor, access_data1) {
   Tensor<float_t> tensor({1, 2, 2, 1});
 
