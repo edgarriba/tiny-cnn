@@ -194,7 +194,7 @@ class Tensor {
    */
   template <typename... Args>
   size_t host_pos(const size_t d, const Args... args) const {
-    size_t dim = dims() - sizeof...(args) - 1;
+    const size_t dim = dims() - sizeof...(args) - 1;
     if (d >= shape_[dim]) {
       throw nn_error("Access tensor out of range.");
     }
@@ -205,7 +205,7 @@ class Tensor {
     }
 
     // apply stride in case that we are in the last two dimensions
-    size_t total_shift = (dim > 2) ? shift : shift + stride_;
+    const size_t total_shift = (dim > 2) ? shift : shift + stride_;
     
     return (d * total_shift + host_pos(args...));
   }
