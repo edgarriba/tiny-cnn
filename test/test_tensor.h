@@ -40,7 +40,7 @@ TEST(tensor, constructors) {
   // t1 = std::move(t2);
 
   // check that we moved data
-  // EXPECT_EQ(t1.size(), serial_size_t(16));
+  // EXPECT_EQ(t1.size(), size_t(16));
 
   // expecting something here is wrong. t2 is in a valid but undefined state,
   // no
@@ -50,7 +50,7 @@ TEST(tensor, constructors) {
   // Tensor<float_t> t3(std::move(t1));
 
   // check that we moved data
-  // EXPECT_EQ(t3.size(), serial_size_t(16));
+  // EXPECT_EQ(t3.size(), size_t(16));
 }
 
 TEST(tensor, shape) {
@@ -181,10 +181,10 @@ TEST(tensor, access_data1) {
 
   const std::array<size_t, 4> &shape = tensor.shape();
 
-  for (serial_size_t n = 0; n < shape[0]; ++n) {
-    for (serial_size_t w = 0; w < shape[1]; ++w) {
-      for (serial_size_t h = 0; h < shape[2]; ++h) {
-        for (serial_size_t d = 0; d < shape[3]; ++d) {
+  for (size_t n = 0; n < shape[0]; ++n) {
+    for (size_t w = 0; w < shape[1]; ++w) {
+      for (size_t h = 0; h < shape[2]; ++h) {
+        for (size_t d = 0; d < shape[3]; ++d) {
           EXPECT_NEAR(tensor.host_at(n, w, h, d), float_t(0.0), 1e-5);
           EXPECT_NEAR(*tensor.host_ptr(n, w, h, d), float_t(0.0), 1e-5);
         }
@@ -250,7 +250,7 @@ TEST(tensor, access_data4) {
   // check data using .at() accessor
   const std::array<float_t, 4> vals1 = {0, 2, 0, 6}, vals2 = {1, 3, 3, 9};
   for (size_t i = 0; i < 2; ++i) {
-    for (serial_size_t j = 0; j < 2; ++j) {
+    for (size_t j = 0; j < 2; ++j) {
       EXPECT_EQ(tensor.host_at(0, i, j, 0), vals1[i * 2 + j]);
     }
   }
@@ -284,7 +284,7 @@ TEST(tensor, access_data5) {
     EXPECT_EQ(tensor.host_data()[i], float_t(1.0));
   }
 
-  for (serial_size_t i = 0; i < 4; ++i) {
+  for (size_t i = 0; i < 4; ++i) {
     EXPECT_EQ(tensor.host_data()[4 + i], float_t(2.0));
   }
 }
@@ -379,21 +379,21 @@ TEST(tensor, access_data8) {
 
     // modify data using operator[] accessor
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[i] = float_t(1.0);
     }
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[4 + i] = float_t(2.0);
     }
 
     // check data using operator[] accessor
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(tensor.host_data()[i], float_t(1.0));
     }
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(tensor.host_data()[4 + i], float_t(2.0));
     }
 }*/
@@ -403,24 +403,24 @@ TEST(tensor, access_data8) {
 
     // modify data using operator[] accessor
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[i] = float_t(1.0);
     }
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[4 + i] = float_t(2.0);
     }
 
     // check data using .at() accessor
 
-    for (serial_size_t i = 0; i < 2; ++i) {
-        for (serial_size_t j = 0; j < 2; ++j) {
+    for (size_t i = 0; i < 2; ++i) {
+        for (size_t j = 0; j < 2; ++j) {
             EXPECT_EQ(tensor.host_at(0,0,i,j), float_t(1.0));
         }
     }
 
-    for (serial_size_t i = 0; i < 2; ++i) {
-        for (serial_size_t j = 0; j < 2; ++j) {
+    for (size_t i = 0; i < 2; ++i) {
+        for (size_t j = 0; j < 2; ++j) {
             EXPECT_EQ(tensor.host_at(0,1,i,j), float_t(2.0));
         }
     }
@@ -431,11 +431,11 @@ TEST(tensor, access_data8) {
 
     // modify data using operator[] accessor
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[i] = float_t(1.0);
     }
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         tensor.mutable_host_data()[4 + i] = float_t(2.0);
     }
 
@@ -444,11 +444,11 @@ TEST(tensor, access_data8) {
     const float_t* ptr11 = tensor.host_ptr(0,0,0,0);
     const float_t* ptr22 = tensor.host_ptr(0,1,0,0);
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(ptr11[i], float_t(1.0));
     }
 
-    for (serial_size_t i = 0; i < 4; ++i) {
+    for (size_t i = 0; i < 4; ++i) {
         EXPECT_EQ(ptr22[i], float_t(2.0));
     }
 }*/
