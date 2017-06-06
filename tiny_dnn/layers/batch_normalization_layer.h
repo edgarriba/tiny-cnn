@@ -25,12 +25,12 @@ class batch_normalization_layer : public layer {
   typedef layer Base;
 
   /**
-  * @param prev_layer      [in] previous layer to be connected with this layer
-  * @param epsilon         [in] small positive value to avoid zero-division
-  * @param momentum        [in] momentum in the computation of the exponential
-  *average of the mean/stddev of the data
-  * @param phase           [in] specify the current context (train/test)
-  **/
+   * @param prev_layer      [in] previous layer to be connected with this layer
+   * @param epsilon         [in] small positive value to avoid zero-division
+   * @param momentum        [in] momentum in the computation of the exponential
+   *average of the mean/stddev of the data
+   * @param phase           [in] specify the current context (train/test)
+   **/
   batch_normalization_layer(const layer &prev_layer,
                             float_t epsilon  = 1e-5,
                             float_t momentum = 0.999,

@@ -511,4 +511,4 @@ TEST(image, subtract_image) {
   }
 }
 
-}  // namespace tiny-dnn
+}  // namespace tiny_dnn

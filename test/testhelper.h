@@ -222,7 +222,7 @@ std::pair<
 
   return std::make_pair(a, t);
 }
-}
+}  // namespace
 
 #ifndef CNN_NO_SERIALIZATION
 inline std::string layer_to_json(const layer &src) {

@@ -319,4 +319,4 @@ TEST(target_cost, train_unbalanced_data) {
             size_t(0));  // should have learned the desired function
 }
 
-}  // namespace tiny-dnn
+}  // namespace tiny_dnn
