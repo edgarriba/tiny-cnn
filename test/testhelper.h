@@ -46,24 +46,21 @@ inline bool is_different_container(const Container &expected,
   return false;
 }
 
+// https://stackoverflow.com/a/12774387/4699324    
+inline bool exists(const char *path) {
+  struct stat buffer;
+  return stat(path, &buffer) == 0;
+}
+
 inline bool exists(const std::string &path) {
-  if (FILE *file = std::fopen(path.c_str(), "r")) {
-    fclose(file);
-    return true;
-  } else {
-    return false;
-  }
+  return exists(path.c_str());
 }
 
 inline std::string unique_path() {
-  std::string pattern;
-  do {
-    pattern = "%%%%-%%%%-%%%%-%%%%";
-    for (auto p = pattern.begin(); p != pattern.end(); ++p) {
-      if (*p == '%') *p = (rand() % 10) + '0';
-    }
-  } while (exists(pattern));
-  //return std::experimental::filesystem::v1::temp_directory_path().string() + pattern;
+  std::string pattern = "%%%%-%%%%-%%%%-%%%%";
+  for (auto p = pattern.begin(); p != pattern.end(); ++p) {
+    if (*p == '%') *p = (rand() % 10) + '0';
+  }
   char path[256];
 #ifdef _WIN32
   ::GetTempPath(256, path);
@@ -71,8 +68,7 @@ inline std::string unique_path() {
   strcpy(path, "/tmp/");
 #endif
   strcat(path, pattern.c_str());
-  struct stat buffer;
-  return (stat(path, &buffer) == 0) ? unique_path() : path;
+  return exists(path) ? unique_path() : path;
 }
 
 vec_t forward_pass(layer &src, const vec_t &vec) {
